@@ -1,4 +1,5 @@
 import argparse, pathlib
+import itertools
 
 
 def reading(sigma, delta, states, file_name):
@@ -40,9 +41,12 @@ def reading(sigma, delta, states, file_name):
                         f"[DFA] Invalid Syntax at line: {linie}, we need 3 states to complete the transitions")
 
                 if transitionLine[0] not in delta.keys():
-                    delta[transitionLine[0]] = {transitionLine[2]: transitionLine[1]}
+                    delta[transitionLine[0]] = {transitionLine[2]: [transitionLine[1]]}
                 else:
-                    delta[transitionLine[0]][transitionLine[2]] = transitionLine[1]
+                    if transitionLine[2] not in delta[transitionLine[0]].keys():
+                        delta[transitionLine[0]][transitionLine[2]] = [transitionLine[1]]
+                    else:
+                        delta[transitionLine[0]][transitionLine[2]].append(transitionLine[1])
 
                 linie = f.readline()
 
@@ -68,11 +72,13 @@ def reading(sigma, delta, states, file_name):
         linie = f.readline()
     f.close()
 
+
 sigma = []
 delta = {}
 states = {}
 visited = {}
 found = False
+
 
 def validate_states():
     return True if list(states.values()).count("S") == 1 and list(states.values()).count("F") > 0 \
@@ -80,15 +86,13 @@ def validate_states():
 
 
 def validate_transitions():
-    print(delta)
-    print(states)
     if len(list(filter(lambda s: s not in list(states.keys()), delta.keys()))):
         return False
 
     for key in delta:
         if len(list(filter(lambda s: s not in list(states.keys()), delta[key].keys()))):
             return False
-        if len(list(filter(lambda s: s not in sigma, delta[key].values()))):
+        if len(list(filter(lambda s: s not in sigma, list(itertools.chain(*list(delta[key].values())))))):
             return False
 
     return True
@@ -116,7 +120,6 @@ if __name__ == "__main__":
 
     try:
         reading(sigma, delta, states, args.file)
-
         for state in states:
             visited[state] = False
 

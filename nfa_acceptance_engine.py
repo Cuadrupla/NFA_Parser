@@ -15,19 +15,22 @@ def check_word(word):
 
 good = False
 queue = Queue()
+
+
 def parse_word(string, state):
     global good
     global queue
     if (states[state] == "S/F" or states[state] == "F") and len(string) == 0:
         good = True
-    elif len(string) != 0:
+    elif len(string) != 0 and state in delta.keys():
         for i in delta[state]:
-            if string.find(delta[state][i]) == 0:
-                queue.put(i)
+            for j in range(0, len(delta[state][i])):
+                if string.find(delta[state][i][j]) == 0:
+                    queue.put(i)
 
-            while not queue.empty():
-                current = queue.get()
-                parse_word(string[len(delta[state][current]):], current)
+                while not queue.empty():
+                    current = queue.get()
+                    parse_word(string[len(delta[state][current][j]):], current)
     else:
         raise Exception('[ERROR]: The given word isn\'t good')
     return good
@@ -47,6 +50,7 @@ if __name__ == "__main__":
         print(exception.args)
         exit()
 
+    print(delta)
     start_state = None
     for state in states:
         if states[state] == "S" or states[state] == "S/F":
