@@ -1,6 +1,6 @@
 import argparse, pathlib
 from queue import Queue
-from nfa_parser_engine import reading
+from e_nfa_parser_engine import reading
 
 sigma = []
 delta = {}
@@ -24,13 +24,25 @@ def parse_word(string, state):
         good = True
     elif len(string) != 0 and state in delta.keys():
         for i in delta[state]:
-            for j in range(0, len(delta[state][i])):
-                if string.find(delta[state][i][j]) == 0:
-                    queue.put(i)
+            emptyFound = False
 
-                while not queue.empty():
-                    current = queue.get()
-                    parse_word(string[len(delta[state][current][j]):], current)
+            for j in range(0, len(delta[state][i])):
+                if string.find(delta[state][i][j]) == 0 or (delta[state][i][j] == "*" and "*" in sigma):
+                    queue.put(tuple([i, delta[state][i][j]]))
+                elif delta[state][i][j] == "*" and "*" not in sigma:
+                    emptyFound = True
+
+            if emptyFound is True and state != i:
+                queue.put(tuple([i, "*"]))
+
+            while not queue.empty():
+                current = queue.get()
+                if current[1] != "*":
+                    result = parse_word(string[len(current[1]):], current[0])
+                else:
+                    result = parse_word(string, current[0])
+                if result is True:
+                    return True
     else:
         raise Exception('[ERROR]: The given word isn\'t good')
     return good
@@ -38,7 +50,7 @@ def parse_word(string, state):
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(
-        description='Given a specific file and a specific string parse and validate that the NFA accepts the word')
+        description='Given a specific file and a specific string parse and validate that the Lambda-NFA accepts the word')
     parser.add_argument('file', type=pathlib.Path)
     parser.add_argument('string', type=str)
     args = parser.parse_args()
@@ -58,7 +70,7 @@ if __name__ == "__main__":
     if start_state is not None:
         try:
             if parse_word(args.string, start_state):
-                print("The word is accepted by this NFA.")
+                print("The word is accepted by this Lambda-NFA.")
             else:
                 print("[ERROR]: The given word isn\'t good")
         except Exception as exception:
