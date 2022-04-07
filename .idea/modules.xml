@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="ProjectModuleManager">
+    <modules>
+      <module fileurl="file://$PROJECT_DIR$/../PycharmProjects/dfa/DFA_Minimization/.idea/DFA_Minimization.iml" filepath="$PROJECT_DIR$/../PycharmProjects/dfa/DFA_Minimization/.idea/DFA_Minimization.iml" />
+      <module fileurl="file://$PROJECT_DIR$/../PycharmProjects/dfa/LaboratorLFA/.idea/LaboratorLFA.iml" filepath="$PROJECT_DIR$/../PycharmProjects/dfa/LaboratorLFA/.idea/LaboratorLFA.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/NFA_Parser.iml" filepath="$PROJECT_DIR$/.idea/NFA_Parser.iml" />
+    </modules>
+  </component>
+</project>
