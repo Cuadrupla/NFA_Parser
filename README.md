@@ -1,4 +1,4 @@
-# NFA_Parsers - Lab 1 (Homework)
+# NFA_Parsers - Lab 2 (Homework)
 This is a Formal and Automata Language repository for NFA Parsers
 
 ### Requirements
