@@ -112,5 +112,6 @@ if __name__ == "__main__":
                 for k in dfa_data['delta'][which_state][to_go_state]:
                     f.write(f"{which_shown}, {k}, {to_go_shown}\n")
         f.write("End\n\n")
+        f.close()
     except Exception as exception:
         print(exception.args)
